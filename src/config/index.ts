@@ -1,0 +1,56 @@
+/* eslint-disable no-undef */
+import dotenv from 'dotenv';
+import path from 'path';
+
+dotenv.config({ path: path.join(process.cwd(), '.env') });
+
+export default {
+  env: process.env.NODE_ENV,
+  port: process.env.PORT,
+  database_url: process.env.DATABASE_URL,
+  bcrypt_salt_rounds: process.env.BCRYPT_SALT_ROUNDS,
+
+  // jwt
+  jwt: {
+    secret: process.env.JWT_SECRET,
+    refresh_secret: process.env.JWT_REFRESH_SECRET,
+    expires_in: process.env.JWT_EXPIRES_IN,
+    refresh_expires_in: process.env.JWT_REFRESH_EXPIRES_IN,
+  },
+  client_url: process.env.CLIENT_URL,
+  email_verify_expires_in: process.env.EMAIL_VERIFY_TOKEN_EXPIRES_IN,
+  email_verification_secret: process.env.EMAIL_VERIFICATION_SECRET,
+  // email -> node mailer
+  mail: {
+    email: process.env.EMAIL,
+    password: process.env.EMAIL_PASSWORD,
+  },
+  forgot_password_secret: process.env.FORGOT_PASSWORD_SECRET,
+  forgot_password_secret_expires_in:
+    process.env.FORGOT_PASSWORD_SECRET_EXPIRES_IN,
+
+  // twilio
+  twilio: {
+    account_sid: process.env.TWILIO_ACCOUNT_SID,
+    auth_token: process.env.TWILIO_AUTH_TOKEN,
+    service_sid: process.env.TWILIO_SERVICE_SID,
+    sender_number: process.env.TWILIO_SENDER_NUMBER,
+  },
+
+  // stripe
+  stripe: {
+    secret_key: process.env.STRIPE_SECRET_KEY,
+    webhook_secret: process.env.STRIPE_WEBHOOK_SECRET,
+  },
+
+  // ssl
+  ssl: {
+    store_id: process.env.SSL_STORE_ID,
+    store_password: process.env.SSL_STORE_PASSWORD as string,
+  },
+
+  // otp
+  otp: {
+    expires_in: process.env.OTP_EXPIRES_IN,
+  },
+};

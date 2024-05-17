@@ -1,0 +1,161 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  super_admin
+  admin
+  user
+}
+
+enum Business_HourStatus {
+  Default
+  Open
+  Close
+}
+
+enum Business_HourDay {
+  saturday
+  sunday
+  monday
+  tuesday
+  wednesday
+  thursday
+  friday
+}
+
+model User {
+  id       String @id @default(uuid())
+  name     String?
+  phone    String  @unique
+  email    String  @unique
+  password String?
+  booking         Booking[]
+  role     Role
+  @@map("users")
+}
+
+model Package {
+  id              String @id @default(uuid())
+  name            String
+  price           Float
+  active          Boolean
+  description     String
+  start_date      String
+  end_date        String
+  active_days     Business_HourDay[]
+  limit           Int
+  child_packages  Sub_Package[]
+  guest_prices    Price[]
+  booking         Booking[]
+  @@map("packages")
+}
+
+model Sub_Package {
+  id       String @id @default(uuid())
+  name     String
+  package_id String
+  package  Package @relation(fields: [package_id], references: [id])
+  booking         Booking[]
+  @@map("sub_packages")
+}
+
+model Guest {
+  id       String @id @default(uuid())
+  name     String
+  price     Price[]
+}
+
+model Location {
+  id       String @id @default(uuid())
+  name     String
+
+  start_point_id    String?
+  start_point      Start_Location?         @relation(fields: [start_point_id], references: [id])
+
+  end_point_id    String?
+  end_point       End_Location?        @relation(fields: [end_point_id], references: [id])
+}
+
+model Start_Location {
+  id       String @id @default(uuid())
+  name     String
+  price    Price[]
+  child_locations Location[]
+
+}
+
+model End_Location {
+  id       String @id @default(uuid())
+  name     String
+  price    Price[]
+  child_locations Location[]
+
+}
+
+
+model Price {
+  id             String          @id @default(uuid())
+  package_id     String
+  package        Package         @relation(fields: [package_id], references: [id])
+
+  start_point_id    String
+  start_point        Start_Location         @relation(fields: [start_point_id], references: [id])
+
+  end_point_id    String
+  end_point       End_Location         @relation(fields: [end_point_id], references: [id])
+
+  guest_id     String
+  guest        Guest         @relation(fields: [guest_id], references: [id])
+
+  price          Float
+  
+}
+model BlockDate {
+  id       String @id @default(uuid())
+  date     String[]
+  @@map("block_dates")
+}
+
+
+model Booking {
+  id       String @id @default(uuid())
+  package_id     String
+  package        Package         @relation(fields: [package_id], references: [id])
+  Sub_Package_id    String?
+  Sub_Package      Sub_Package?         @relation(fields: [Sub_Package_id], references: [id])
+  user_id     String
+  user        User         @relation(fields: [user_id], references: [id])
+  child_guests  Int
+  adult_guests  Int
+  total_guests  Int
+  infant  Int
+  total_price  Float
+  start_point    String
+  end_point    String
+  date  String
+
+  @@map("bookings")
+
+}
+
+model Otp {
+  id         Int      @id @default(autoincrement())
+  phone      String
+  otp        String
+  is_used    Boolean  @default(false)
+  // expires_at DateTime @default(dbgenerated("now() + interval '3 minutes'"))
+  expires_at DateTime
+
+  created_at DateTime @default(now())
+
+  @@map("otps")
+}
