@@ -34,7 +34,7 @@ const createBooking = async (payload: any) => {
   const newData = {
     ...payload,
     package: { connect: { id: payload.package_id } },
-    Sub_Package: payload.Sub_Package_id?.id
+    Sub_Package: payload.Sub_Package_id
       ? { connect: { id: payload.Sub_Package_id } }
       : undefined,
     user: { connect: { email: payload?.user?.email } },
@@ -48,6 +48,7 @@ const createBooking = async (payload: any) => {
       ...newData,
     },
   });
+
   return booking;
 };
 
