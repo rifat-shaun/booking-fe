@@ -11,6 +11,8 @@ const client_1 = require("@prisma/client");
 const router = express_1.default.Router();
 // create booking
 router.post('/', booking_controller_1.bookingController.createBooking);
+// get single booking
+router.get('/', booking_controller_1.bookingController.getBooking);
 // get all bookings
 router.get('/all', (0, auth_1.default)(client_1.Role.super_admin), booking_controller_1.bookingController.getAllBookings);
 // get single booking by user id

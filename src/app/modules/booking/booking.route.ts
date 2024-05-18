@@ -7,6 +7,9 @@ const router = express.Router();
 // create booking
 router.post('/', bookingController.createBooking);
 
+// get single booking
+router.get('/', bookingController.getBooking)
+
 // get all bookings
 router.get('/all', auth(Role.super_admin), bookingController.getAllBookings);
 // get single booking by user id

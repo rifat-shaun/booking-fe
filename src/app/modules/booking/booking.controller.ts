@@ -17,8 +17,6 @@ const createBooking = catchAsync(async (req: any, res: any) => {
   const payload = req.body;
   const orderNumber = generateUniqueOrderNumber();
 
-  console.log('This is payload ===>', payload);
-
   const queryString = `merchant_id=387193277&hashValue=dceca395341dcd40c6a5de824646e773370b8cae&trnAmount=${payload?.totalAmount}&trnOrderNumber=${orderNumber}&ordName=${encodeURIComponent(payload?.user?.name)}&ordEmailAddress=${payload?.user?.email}&shipPhoneNumber=${payload?.user?.phone}&ordAddress1=${encodeURIComponent(payload?.user?.address)}`;
 
   const fullUrl = `https://web.na.bambora.com/scripts/payment/payment.asp?${queryString}`;
@@ -55,6 +53,16 @@ const getAllBookings = catchAsync(async (req: any, res: any) => {
   });
 });
 
+// get single booking
+const getBooking = catchAsync(async (req: any, res: any) => {
+  const { order_number } = req.query || {};
+  const bookings = await bookingService.getBooking(order_number);
+  return res.status(200).json({
+    success: true,
+    data: bookings,
+  });
+});
+
 // get single booking by user id
 const getSingleBookingByUserId = catchAsync(async (req: any, res: any) => {
   const user = req.user;
@@ -68,5 +76,6 @@ const getSingleBookingByUserId = catchAsync(async (req: any, res: any) => {
 export const bookingController = {
   createBooking,
   getAllBookings,
+  getBooking,
   getSingleBookingByUserId,
 };
