@@ -1,5 +1,6 @@
 import axios from 'axios';
 import prisma from '../../../shared/prisma';
+import { AuthService } from '../auth/auth.service';
 
 const createBooking = async (payload: any) => {
   const fetchedPackage = await prisma.package.findUnique({
@@ -15,7 +16,19 @@ const createBooking = async (payload: any) => {
   });
 
   if (!fetchedUser) {
-    throw new Error('User not found');
+    const { name, phone, email } = payload?.user;
+    const randomNum = Math.floor(100000 + Math.random() * 900000);
+    const password = randomNum.toString();
+    const data = {
+      name,
+      phone,
+      email,
+      password,
+      role: 'user',
+    };
+
+    const result = await AuthService.signup(data);
+    if (!result) throw new Error('User not created');
   }
 
   const newData = {
@@ -24,7 +37,7 @@ const createBooking = async (payload: any) => {
     Sub_Package: payload.Sub_Package_id?.id
       ? { connect: { id: payload.Sub_Package_id } }
       : undefined,
-    user: { connect: {email: payload?.user?.email} },
+    user: { connect: { email: payload?.user?.email } },
   };
 
   delete newData.package_id;
