@@ -9,19 +9,34 @@ const generateUniqueOrderNumber = () => {
   const minute = String(now.getMinutes()).padStart(2, '0');
   const randomNum = Math.floor(1000 + Math.random() * 9000);
   const uniqueNumber = `${year}${day}${minute}${randomNum}`;
-  
+
   return uniqueNumber;
-}
+};
 
 const createBooking = catchAsync(async (req: any, res: any) => {
   const payload = req.body;
   const orderNumber = generateUniqueOrderNumber();
 
-  const queryString = `merchant_id=387193277&hashValue=dceca395341dcd40c6a5de824646e773370b8cae&trnAmount=${payload?.totalAmount}&trnOrderNumber=${orderNumber}&ordName=${encodeURIComponent(payload?.user?.name)}&ordEmailAddress=${payload?.user?.email}&ordAddress1=${encodeURIComponent(payload?.user?.address)}` 
+  console.log('This is payload ===>', payload);
+
+  const queryString = `merchant_id=387193277&hashValue=dceca395341dcd40c6a5de824646e773370b8cae&trnAmount=${payload?.totalAmount}&trnOrderNumber=${orderNumber}&ordName=${encodeURIComponent(payload?.user?.name)}&ordEmailAddress=${payload?.user?.email}&ordAddress1=${encodeURIComponent(payload?.user?.address)}`;
 
   const fullUrl = `https://web.na.bambora.com/scripts/payment/payment.asp?${queryString}`;
-  
-  return bookingService.createBooking({...payload, orderNumber}).then(() => {
+
+  const orderData = {
+    adult_guests: payload?.adult_guest,
+    child_guests: payload?.child_guest,
+    infant: payload?.infant_guest,
+    package_id: payload?.package_id,
+    start_point: payload?.start_point,
+    end_point: payload?.end_point,
+    date: payload?.date,
+    total_price: payload?.totalAmount,
+    user_id: payload?.user?.id,
+    order_number: orderNumber
+  };
+
+  return bookingService.createBooking(orderData).then(() => {
     return res.status(201).json({
       success: true,
       url: fullUrl,
