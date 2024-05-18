@@ -71,6 +71,7 @@ const getBooking = async (order_number: any) => {
     },
     include: {
       package: true,
+      Sub_Package: true,
     },
   });
 
