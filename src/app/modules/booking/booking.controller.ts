@@ -28,12 +28,14 @@ const createBooking = catchAsync(async (req: any, res: any) => {
     child_guests: payload?.child_guest,
     infant: payload?.infant_guest,
     package_id: payload?.package_id,
+    Sub_Package_id: payload?.sub_package_id || null,
     start_point: payload?.start_point,
     end_point: payload?.end_point,
     date: payload?.date,
     total_price: payload?.totalAmount,
-    user_id: payload?.user?.id,
-    order_number: orderNumber
+    user: payload?.user,
+    order_number: orderNumber,
+    total_guests: payload?.adult_guest + payload?.child_guest
   };
 
   return bookingService.createBooking(orderData).then(() => {

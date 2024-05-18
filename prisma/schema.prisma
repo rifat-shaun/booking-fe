@@ -142,7 +142,7 @@ model Booking {
   start_point    String
   end_point    String
   date  String
-  order_number Int
+  order_number String
 
   @@map("bookings")
 
