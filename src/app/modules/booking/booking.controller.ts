@@ -1,11 +1,21 @@
 import axios from 'axios';
-const { v4: uuidv4 } = require('uuid');
 import catchAsync from '../../../shared/catchAsync';
 import { bookingService } from './booking.service';
 
+const generateUniqueOrderNumber = () => {
+  const now = new Date();
+  const year = now.getFullYear().toString().slice(-2);
+  const day = String(now.getDate()).padStart(2, '0');
+  const minute = String(now.getMinutes()).padStart(2, '0');
+  const randomNum = Math.floor(1000 + Math.random() * 9000);
+  const uniqueNumber = `${year}${day}${minute}${randomNum}`;
+  
+  return uniqueNumber;
+}
+
 const createBooking = catchAsync(async (req: any, res: any) => {
   const payload = req.body;
-  const orderNumber = uuidv4();
+  const orderNumber = generateUniqueOrderNumber();
   console.log(payload);
   const queryString = `merchant_id=387193277&hashValue=dceca395341dcd40c6a5de824646e773370b8cae&trnAmount=${payload?.totalAmount}&trnOrderNumber=${orderNumber}&ordName=${encodeURIComponent(payload?.user?.name)}&ordEmailAddress=${payload?.user?.email}&ordAddress1=${encodeURIComponent(payload?.user?.address)}` 
 
