@@ -2,10 +2,10 @@ import axios from 'axios';
 import prisma from '../../../shared/prisma';
 
 const createBooking = async (payload: any) => {
-  // const booking = await prisma.booking.create({
-  //   data: payload,
-  // });
-  // return booking;
+  const booking = await prisma.booking.create({
+    data: payload,
+  });
+  return booking;
 };
 
 // all booking data
