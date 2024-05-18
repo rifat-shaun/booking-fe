@@ -63,6 +63,15 @@ const getBooking = catchAsync(async (req: any, res: any) => {
   });
 });
 
+const getAllBookingsCountOfADay = catchAsync(async (req: any, res: any) => {
+  const {date, package_id, Sub_Package_id} = req.query || {};
+  const bookings = await bookingService.getAllBookingByDate({date, package_id, Sub_Package_id});
+  return res.status(200).json({
+    success: true,
+    data: bookings,
+  });
+});
+
 // get single booking by user id
 const getSingleBookingByUserId = catchAsync(async (req: any, res: any) => {
   const user = req.user;
@@ -77,5 +86,6 @@ export const bookingController = {
   createBooking,
   getAllBookings,
   getBooking,
+  getAllBookingsCountOfADay,
   getSingleBookingByUserId,
 };

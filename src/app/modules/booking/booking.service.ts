@@ -64,6 +64,23 @@ const getAllBookings = async () => {
   return bookings;
 };
 
+const getAllBookingByDate = async (data: any) => {
+  const {date, package_id, Sub_Package_id} = data;
+  const bookings = await prisma.booking.findMany({
+    where: {
+      date,
+      package_id,
+      Sub_Package_id
+    }
+  });
+  let sum = 0;
+  bookings.forEach((item: any) => {
+    sum += item.total_guests;
+  });
+
+  return sum;
+}
+
 const getBooking = async (order_number: any) => {
   const booking = await prisma.booking.findUnique({
     where: {
@@ -96,5 +113,6 @@ export const bookingService = {
   createBooking,
   getAllBookings,
   getBooking,
+  getAllBookingByDate,
   getSingleBookingByUserId,
 };
