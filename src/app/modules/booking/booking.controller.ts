@@ -30,10 +30,24 @@ const createBooking = catchAsync(async (req: any, res: any) => {
   //   'https://web.na.bambora.com/scripts/payment/payment.asp?merchant_id=387193277&hashValue=dceca395341dcd40c6a5de824646e773370b8cae',
   // );
   // const booking = await bookingService.createBooking(payload);
+
+  const merchant_id = '387193277';
+  const trnAmount = '0.50';
+  const ordName = 'Rifat';
+  const ordPostalCode = 'V8T 4M3';
+  const ordProvince = 'BC';
+  const ordCountry = 'CA';
+  const hashValue = 'dceca395341dcd40c6a5de824646e773370b8cae';
+
+  const queryString = `merchant_id=${merchant_id}&trnAmount=${trnAmount}&ordName=${encodeURIComponent(ordName)}&ordPostalCode=${encodeURIComponent(ordPostalCode)}&ordProvince=${ordProvince}&ordCountry=${ordCountry}&hashValue=${hashValue}`;
+
+  const fullUrl = `https://web.na.bambora.com/scripts/payment/payment.asp?merchant_id=387193277&hashValue=dceca395341dcd40c6a5de824646e773370b8cae&trnAmount=0.10`;
+
+  console.log(fullUrl);
+
   return res.status(201).json({
     success: true,
-    url: 'https://web.na.bambora.com/scripts/payment/payment.asp?merchant_id=387193277&hashValue=dceca395341dcd40c6a5de824646e773370b8cae',
-    // data: booking,
+    url: fullUrl,
   });
 });
 
